@@ -18,11 +18,7 @@ public class SlackPluginBase {
     public static final String CK_CHANNEL = "channel";
     public static final String CK_USER_NAME = "user_name";
     public static final String CK_NOTIFY_CHANNEL = "notify_channel";
-    public static final String CK_ADD_ATTACHMENT = "add_attachment";
-    public static final String CK_SHORT_MODE = "short_mode";
-
     public static final String CK_COLOR = "color";
-    public static final String CK_ADD_BLITEMS = "backlog_items";
     public static final String CK_CUSTOM_MESSAGE = "custom_message";
 
     protected static ConfigurationRequest configuration() {
@@ -45,20 +41,6 @@ public class SlackPluginBase {
                 CK_COLOR, "Color", "#FF0000",
                 "Color to use for Slack message",
                 ConfigurationField.Optional.NOT_OPTIONAL)
-        );
-        configurationRequest.addField(new BooleanField(
-                CK_ADD_ATTACHMENT, "Include more information", true,
-                "Add structured information as message attachment")
-        );
-        configurationRequest.addField(new NumberField(
-                CK_ADD_BLITEMS, "Backlog items", 5,
-                "Number of backlog item descriptions to attach")
-        );
-
-        configurationRequest.addField(new BooleanField(
-                CK_SHORT_MODE, "Short mode", false,
-                "Enable short mode? This strips down the Slack message to the bare minimum to take less space in the chat room. " +
-                        "Not used in alarm callback but only in the message output module.")
         );
         configurationRequest.addField(new BooleanField(
                 CK_NOTIFY_CHANNEL, "Notify Channel", false,

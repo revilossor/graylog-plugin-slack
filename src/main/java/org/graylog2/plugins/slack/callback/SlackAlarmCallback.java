@@ -52,28 +52,7 @@ public class SlackAlarmCallback extends SlackPluginBase implements AlarmCallback
 
         // Add attachments if requested.
         final List<Message> backlogItems = getAlarmBacklog(result);
-
-        if (configuration.getBoolean(CK_ADD_ATTACHMENT)) {
-            message.addAttachment(new SlackMessage.AttachmentField("Stream ID", stream.getId(), true));
-            message.addAttachment(new SlackMessage.AttachmentField("Stream Title", stream.getTitle(), false));
-            message.addAttachment(new SlackMessage.AttachmentField("Stream Description", stream.getDescription(), false));
-
-            int count = configuration.getInt(CK_ADD_BLITEMS);
-            if (count < 1) {
-                count = 5; //Default items to show
-            }
-            final int blSize = backlogItems.size();
-            if (blSize < count) {
-                count = blSize;
-            }
-            final StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < count; i++) {
-                sb.append(backlogItems.get(i).getMessage()).append("\n\n");
-            }
-            String attachmentName = "Backlog Items (" + Integer.toString(count) + ")";
-            message.addAttachment(new SlackMessage.AttachmentField(attachmentName, sb.toString(), false));
-        }
-
+        
         try {
             client.send(message);
         } catch (SlackClient.SlackClientException e) {

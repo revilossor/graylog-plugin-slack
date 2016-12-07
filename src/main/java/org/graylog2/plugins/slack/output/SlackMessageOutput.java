@@ -68,21 +68,6 @@ public class SlackMessageOutput extends SlackPluginBase implements MessageOutput
                 configuration.getString(CK_CHANNEL)
         );
 
-        // Add attachments if requested.
-        if (!configuration.getBoolean(CK_SHORT_MODE) && configuration.getBoolean(CK_ADD_ATTACHMENT)) {
-            slackMessage.addAttachment(new SlackMessage.AttachmentField("Stream Description", stream.getDescription(), false));
-            slackMessage.addAttachment(new SlackMessage.AttachmentField("Source", msg.getSource(), true));
-
-            for (Map.Entry<String, Object> field : msg.getFields().entrySet()) {
-                if (Message.RESERVED_FIELDS.contains(field.getKey())) {
-                    continue;
-                }
-
-                slackMessage.addAttachment(new SlackMessage.AttachmentField(field.getKey(), field.getValue().toString(), true));
-            }
-
-        }
-
         try {
             client.send(slackMessage);
         } catch (SlackClient.SlackClientException e) {
@@ -91,10 +76,6 @@ public class SlackMessageOutput extends SlackPluginBase implements MessageOutput
     }
 
     public String buildMessage(Stream stream, Message msg) {
-        if (configuration.getBoolean(CK_SHORT_MODE)) {
-            return msg.getTimestamp().toDateTime(DateTimeZone.getDefault()).toString(DateTimeFormat.shortTime()) + ": " + msg.getMessage();
-        }
-
         boolean notifyChannel = configuration.getBoolean(CK_NOTIFY_CHANNEL);
 
         String titleLink = titleLink = "_" + stream.getTitle() + "_";
