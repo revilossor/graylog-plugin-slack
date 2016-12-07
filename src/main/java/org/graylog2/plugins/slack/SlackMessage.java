@@ -20,17 +20,13 @@ public class SlackMessage {
     private final String channel;
     private final String userName;
     private final String message;
-    private final String iconUrl;
-    private final String iconEmoji;
     private final String color;
     private final boolean linkNames;
 
     private final List<AttachmentField> attachments;
 
-    public SlackMessage(String color, String iconEmoji, String iconUrl, String message, String userName, String channel, boolean linkNames) {
+    public SlackMessage(String color, String message, String userName, String channel, boolean linkNames) {
         this.color = color;
-        this.iconEmoji = iconEmoji;
-        this.iconUrl = iconUrl;
         this.message = message;
         this.userName = userName;
         this.channel = channel;
@@ -50,14 +46,6 @@ public class SlackMessage {
 
         if (!isNullOrEmpty(userName)) {
             params.put("username", userName);
-        }
-
-        if (!isNullOrEmpty(iconUrl)) {
-            params.put("icon_url", iconUrl);
-        }
-
-        if (!isNullOrEmpty(iconEmoji)) {
-            params.put("icon_emoji", ensureEmojiSyntax(iconEmoji));
         }
 
         if (!attachments.isEmpty()) {

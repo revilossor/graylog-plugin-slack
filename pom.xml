@@ -22,9 +22,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git@github.com:Graylog2/graylog-plugin-slack.git</connection>
-        <developerConnection>scm:git:git@github.com:Graylog2/graylog-plugin-slack.git</developerConnection>
-        <url>https://github.com/Graylog2/graylog-plugin-slack</url>
+        <connection>scm:git:git@github.com:revilossor/graylog-plugin-slack.git</connection>
+        <developerConnection>scm:git:git@github.com:revilossor/graylog-plugin-slack.git</developerConnection>
+        <url>https://github.com/revilossor/graylog-plugin-slack</url>
         <tag>HEAD</tag>
     </scm>
 

@@ -62,8 +62,6 @@ public class SlackMessageOutput extends SlackPluginBase implements MessageOutput
     public void write(Message msg) throws Exception {
         SlackMessage slackMessage = new SlackMessage(
                 configuration.getString(CK_COLOR),
-                configuration.getString(CK_ICON_EMOJI),
-                configuration.getString(CK_ICON_URL),
                 buildMessage(stream, msg),
                 configuration.getString(CK_USER_NAME),
                 configuration.getString(CK_CHANNEL),
@@ -97,15 +95,9 @@ public class SlackMessageOutput extends SlackPluginBase implements MessageOutput
             return msg.getTimestamp().toDateTime(DateTimeZone.getDefault()).toString(DateTimeFormat.shortTime()) + ": " + msg.getMessage();
         }
 
-        String graylogUri = configuration.getString(CK_GRAYLOG2_URL);
         boolean notifyChannel = configuration.getBoolean(CK_NOTIFY_CHANNEL);
 
-        String titleLink;
-        if (!isNullOrEmpty(graylogUri)) {
-            titleLink = "<" + buildStreamLink(graylogUri, stream) + "|" + stream.getTitle() + ">";
-        } else {
-            titleLink = "_" + stream.getTitle() + "_";
-        }
+        String titleLink = titleLink = "_" + stream.getTitle() + "_";
 
         return notifyChannel ? "@channel " : "" + "*New message in Graylog stream " + titleLink + "*:\n" + "> " + msg.getMessage();
     }

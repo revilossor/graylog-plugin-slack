@@ -44,8 +44,6 @@ public class SlackAlarmCallback extends SlackPluginBase implements AlarmCallback
 
         SlackMessage message = new SlackMessage(
                 configuration.getString(CK_COLOR),
-                configuration.getString(CK_ICON_EMOJI),
-                configuration.getString(CK_ICON_URL),
                 buildMessage(stream, result),
                 configuration.getString(CK_USER_NAME),
                 configuration.getString(CK_CHANNEL),
@@ -74,24 +72,6 @@ public class SlackAlarmCallback extends SlackPluginBase implements AlarmCallback
             }
             String attachmentName = "Backlog Items (" + Integer.toString(count) + ")";
             message.addAttachment(new SlackMessage.AttachmentField(attachmentName, sb.toString(), false));
-        }
-
-        // Add custom fields
-        final String customFields = configuration.getString(SlackPluginBase.CK_FIELDS);
-        if (!isNullOrEmpty(customFields)) {
-            final String[] fields = customFields.split(",");
-            for (MessageSummary messageSummary : result.getMatchingMessages()) {
-                final String value = Arrays.stream(fields)
-                        .map(String::trim)
-                        .map(messageSummary::getField)
-                        .map(String::valueOf)
-                        .collect(Collectors.joining(DELIMITER));
-
-                final String title = String.join(DELIMITER, (CharSequence[]) fields);
-
-                final SlackMessage.AttachmentField attachment = new SlackMessage.AttachmentField(title, value, false);
-                message.addAttachment(attachment);
-            }
         }
 
         try {
@@ -123,15 +103,9 @@ public class SlackAlarmCallback extends SlackPluginBase implements AlarmCallback
     }
 
     public String buildMessage(Stream stream, AlertCondition.CheckResult result) {
-        String graylogUri = configuration.getString(CK_GRAYLOG2_URL);
         boolean notifyChannel = configuration.getBoolean(CK_NOTIFY_CHANNEL);
 
-        String titleLink;
-        if (!isNullOrEmpty(graylogUri)) {
-            titleLink = "<" + buildStreamLink(graylogUri, stream) + "|" + stream.getTitle() + ">";
-        } else {
-            titleLink = "_" + stream.getTitle() + "_";
-        }
+        String titleLink = "_" + stream.getTitle() + "_";
 
         return notifyChannel ? "@channel " : "" + "*Alert for Graylog stream " + titleLink + "*:\n" + "> " + result.getResultDescription();
     }

@@ -20,10 +20,8 @@ public class SlackMessageOutputTest {
             .put("add_attachment", true)
             .put("notify_channel", true)
             .put("link_names", true)
-            .put("icon_url", "http://example.com")
-            .put("icon_emoji", "test_icon_emoji")
-            .put("graylog2_url", "http://graylog2.example.com")
             .put("color", "#FF0000")
+            .put("custom_message", "test_message")
             .build();
 
     @Test
@@ -32,17 +30,12 @@ public class SlackMessageOutputTest {
 
         final Map<String, Object> attributes = output.getConfiguration();
         assertThat(attributes.keySet(), hasItems("webhook_url", "channel", "user_name", "add_attachment",
-                "notify_channel", "link_names", "icon_url", "icon_emoji", "graylog2_url", "color"));
+                "notify_channel", "link_names", "color", "custom_message"));
     }
 
     @Test
     public void checkConfigurationSucceedsWithValidConfiguration() throws MessageOutputConfigurationException {
         new SlackMessageOutput(null, new Configuration(VALID_CONFIG_SOURCE));
-    }
-
-    @Test(expected = MessageOutputConfigurationException.class)
-    public void checkConfigurationFailsIfApiTokenIsMissing() throws MessageOutputConfigurationException {
-        new SlackMessageOutput(null, validConfigurationWithout("webhook_url"));
     }
 
     @Test(expected = MessageOutputConfigurationException.class)
@@ -59,47 +52,7 @@ public class SlackMessageOutputTest {
     public void checkConfigurationWorksWithCorrectDirectMessageNotations() throws MessageOutputConfigurationException {
         new SlackMessageOutput(null, validConfigurationWithValue("channel", "@john"));
     }
-    
-    @Test
-    public void checkConfigurationWorksWithCorrectProxyAddress() throws MessageOutputConfigurationException {
-        new SlackMessageOutput(null, validConfigurationWithValue("proxy_address", "http://127.0.0.1:1080"));
-    }
-    
-    @Test(expected = MessageOutputConfigurationException.class)
-    public void checkConfigurationFailsIfIconUrlIsInvalid() throws MessageOutputConfigurationException {
-        new SlackMessageOutput(null, validConfigurationWithValue("icon_url", "Definitely$$Not#A!!URL"));
-    }
 
-    @Test(expected = MessageOutputConfigurationException.class)
-    public void checkConfigurationFailsIfIconUrlIsNotHttpOrHttps() throws MessageOutputConfigurationException {
-        new SlackMessageOutput(null, validConfigurationWithValue("icon_url", "ftp://example.net"));
-    }
-
-    @Test(expected = MessageOutputConfigurationException.class)
-    public void checkConfigurationFailsIfGraylog2UrlIsInvalid() throws MessageOutputConfigurationException {
-        new SlackMessageOutput(null, validConfigurationWithValue("graylog2_url", "Definitely$$Not#A!!URL"));
-    }
-
-    @Test(expected = MessageOutputConfigurationException.class)
-    public void checkConfigurationFailsIfGraylog2UrlIsNotHttpOrHttps() throws MessageOutputConfigurationException {
-        new SlackMessageOutput(null, validConfigurationWithValue("graylog2_url", "ftp://example.net"));
-    }
-
-    @Test(expected = MessageOutputConfigurationException.class)
-    public void checkConfigurationFailsIfProxyAddressIsInvalid() throws MessageOutputConfigurationException {
-        new SlackMessageOutput(null, validConfigurationWithValue("proxy_address", "Definitely$$Not#A!!URL"));
-    }
-
-    @Test(expected = MessageOutputConfigurationException.class)
-    public void checkConfigurationFailsIfProxyAddressIsMissingAPort() throws MessageOutputConfigurationException {
-        new SlackMessageOutput(null, validConfigurationWithValue("proxy_address", "127.0.0.1"));
-    }
-    
-    @Test(expected = MessageOutputConfigurationException.class)
-    public void checkConfigurationFailsIfProxyAddressHasWrongFormat() throws MessageOutputConfigurationException {
-        new SlackMessageOutput(null, validConfigurationWithValue("proxy_address", "vpn://127.0.0.1"));
-    }
-    
     private Configuration validConfigurationWithout(final String key) {
         return new Configuration(Maps.filterEntries(VALID_CONFIG_SOURCE, new Predicate<Map.Entry<String, Object>>() {
             @Override

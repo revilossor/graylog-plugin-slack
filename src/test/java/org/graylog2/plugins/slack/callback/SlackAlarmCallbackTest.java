@@ -22,10 +22,8 @@ public class SlackAlarmCallbackTest {
             .put("add_attachment", true)
             .put("notify_channel", true)
             .put("link_names", true)
-            .put("icon_url", "http://example.com")
-            .put("icon_emoji", "test_icon_emoji")
-            .put("graylog2_url", "http://graylog2.example.com")
             .put("color", "#FF0000")
+            .put("custom_message", "test_message")
             .build();
     private SlackAlarmCallback alarmCallback;
 
@@ -47,19 +45,13 @@ public class SlackAlarmCallbackTest {
 
         final Map<String, Object> attributes = alarmCallback.getAttributes();
         assertThat(attributes.keySet(), hasItems("webhook_url", "channel", "user_name", "add_attachment",
-                "notify_channel", "link_names", "icon_url", "icon_emoji", "graylog2_url", "color"));
+                "notify_channel", "link_names", "color", "custom_message"));
     }
 
     @Test
     public void checkConfigurationSucceedsWithValidConfiguration()
             throws AlarmCallbackConfigurationException, ConfigurationException {
         alarmCallback.initialize(new Configuration(VALID_CONFIG_SOURCE));
-    }
-
-    @Test(expected = AlarmCallbackConfigurationException.class)
-    public void checkConfigurationFailsIfApiTokenIsMissing()
-            throws AlarmCallbackConfigurationException, ConfigurationException {
-        alarmCallback.initialize(validConfigurationWithout("webhook_url"));
     }
 
     @Test(expected = AlarmCallbackConfigurationException.class)
@@ -72,57 +64,11 @@ public class SlackAlarmCallbackTest {
     public void checkConfigurationFailsIfChannelDoesAcceptDirectMessages() throws AlarmCallbackConfigurationException, ConfigurationException {
         alarmCallback.initialize(validConfigurationWithValue("channel", "@john"));
     }
-    
-    @Test
-    public void checkConfigurationWorksWithCorrectProxyAddress() throws AlarmCallbackConfigurationException, ConfigurationException {
-    	alarmCallback.initialize(validConfigurationWithValue("proxy_address", "https://127.0.0.1:1080"));
-    }
 
-    @Test(expected = AlarmCallbackConfigurationException.class)
-    public void checkConfigurationFailsIfProxyAddressHasWrongScheme() throws AlarmCallbackConfigurationException, ConfigurationException {
-        alarmCallback.initialize(validConfigurationWithValue("proxy_address", "vpn://127.0.0.1"));
-    }
-
-    @Test(expected = AlarmCallbackConfigurationException.class)
-    public void checkConfigurationFailsIfIconUrlIsInvalid() throws AlarmCallbackConfigurationException, ConfigurationException {
-        alarmCallback.initialize(validConfigurationWithValue("icon_url", "Definitely$$Not#A!!URL"));
-    }
-
-    @Test(expected = AlarmCallbackConfigurationException.class)
-    public void checkConfigurationFailsIfIconUrlIsNotHttpOrHttps() throws AlarmCallbackConfigurationException, ConfigurationException {
-        alarmCallback.initialize(validConfigurationWithValue("icon_url", "ftp://example.net"));
-    }
-
-    @Test(expected = AlarmCallbackConfigurationException.class)
-    public void checkConfigurationFailsIfGraylog2UrlIsInvalid() throws AlarmCallbackConfigurationException, ConfigurationException {
-        alarmCallback.initialize(validConfigurationWithValue("graylog2_url", "Definitely$$Not#A!!URL"));
-    }
-
-    @Test(expected = AlarmCallbackConfigurationException.class)
-    public void checkConfigurationFailsIfGraylog2UrlIsNotHttpOrHttps() throws AlarmCallbackConfigurationException, ConfigurationException {
-        alarmCallback.initialize(validConfigurationWithValue("graylog2_url", "ftp://example.net"));
-    }
-
-    @Test(expected = AlarmCallbackConfigurationException.class)
-    public void checkConfigurationFailsIfProxyAddressIsInvalid() throws AlarmCallbackConfigurationException, ConfigurationException {
-    	alarmCallback.initialize(validConfigurationWithValue("proxy_address", "Definitely$$Not#A!!URL"));
-    }
-
-    @Test(expected = AlarmCallbackConfigurationException.class)
-    public void checkConfigurationFailsIfProxyAddressIsMissingAPort() throws AlarmCallbackConfigurationException, ConfigurationException {
-    	alarmCallback.initialize(validConfigurationWithValue("proxy_address", "127.0.0.1"));
-    }
-    
-    @Test(expected = AlarmCallbackConfigurationException.class)
-    public void checkConfigurationFailsIfProxyAddressHasWrongFormat() throws AlarmCallbackConfigurationException, ConfigurationException {
-    	alarmCallback.initialize(validConfigurationWithValue("proxy_address", "vpn://127.0.0.1"));
-    }
-    
     @Test
     public void testGetRequestedConfiguration() {
         assertThat(alarmCallback.getRequestedConfiguration().asList().keySet(),
-                hasItems("webhook_url", "channel", "user_name", "add_attachment", "notify_channel", "link_names",
-                        "icon_url", "icon_emoji", "graylog2_url", "color"));
+                hasItems("webhook_url", "channel", "user_name", "add_attachment", "notify_channel", "link_names", "color", "custom_message"));
     }
 
     private Configuration validConfigurationWithout(final String key) {

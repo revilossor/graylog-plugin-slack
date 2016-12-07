@@ -24,11 +24,9 @@ public class SlackClient {
     private static final Logger LOG = LoggerFactory.getLogger(SlackClient.class);
 
     private final String webhookUrl;
-    private final String proxyURL;
 
     public SlackClient(Configuration configuration) {
         this.webhookUrl = configuration.getString(SlackPluginBase.CK_WEBHOOK_URL);
-        this.proxyURL = configuration.getString(SlackPluginBase.CK_PROXY_ADDRESS);
     }
 
     public void send(SlackMessage message) throws SlackClientException {
@@ -38,31 +36,22 @@ public class SlackClient {
         } catch (MalformedURLException e) {
             throw new SlackClientException("Error while constructing webhook URL.", e);
         }
-
         final HttpURLConnection conn;
-        try {
-            if (!StringUtils.isEmpty(proxyURL)) {
-                final URI proxyUri = new URI(proxyURL);
-                InetSocketAddress sockAddress = new InetSocketAddress(proxyUri.getHost(), proxyUri.getPort());
-                final Proxy proxy = new Proxy(Proxy.Type.HTTP, sockAddress);
-                conn = (HttpURLConnection) url.openConnection(proxy);
-            } else {
-                conn = (HttpURLConnection) url.openConnection();
-            }
+        try{
+            conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
-        } catch (URISyntaxException | IOException e) {
-            throw new SlackClientException("Could not open connection to Slack API", e);
+        } catch(Exception e) {
+            throw new SlackClientException("error making an httpURL connection");
         }
-
         try (final Writer writer = new OutputStreamWriter(conn.getOutputStream())) {
             writer.write(message.getJsonString());
             writer.flush();
 
             final int responseCode = conn.getResponseCode();
             if (responseCode != 200) {
-                if(LOG.isDebugEnabled()){
+                if(LOG.isDebugEnabled()) {
                     try (final InputStream responseStream = conn.getInputStream()) {
                         final byte[] responseBytes = ByteStreams.toByteArray(responseStream);
                         final String response = new String(responseBytes, Charsets.UTF_8);

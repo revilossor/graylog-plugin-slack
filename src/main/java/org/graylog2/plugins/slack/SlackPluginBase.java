@@ -21,13 +21,10 @@ public class SlackPluginBase {
     public static final String CK_ADD_ATTACHMENT = "add_attachment";
     public static final String CK_SHORT_MODE = "short_mode";
     public static final String CK_LINK_NAMES = "link_names";
-    public static final String CK_ICON_URL = "icon_url";
-    public static final String CK_ICON_EMOJI = "icon_emoji";
-    public static final String CK_GRAYLOG2_URL = "graylog2_url";
-    public static final String CK_PROXY_ADDRESS = "proxy_address";
+
     public static final String CK_COLOR = "color";
-    public static final String CK_FIELDS = "custom_fields";
     public static final String CK_ADD_BLITEMS = "backlog_items";
+    public static final String CK_CUSTOM_MESSAGE = "custom_message";
 
     protected static ConfigurationRequest configuration() {
         final ConfigurationRequest configurationRequest = new ConfigurationRequest();
@@ -72,29 +69,10 @@ public class SlackPluginBase {
                 CK_LINK_NAMES, "Link names", true,
                 "Find and link channel names and user names")
         );
+
         configurationRequest.addField(new TextField(
-                CK_ICON_URL, "Icon URL", null,
-                "Image to use as the icon for this message",
-                ConfigurationField.Optional.OPTIONAL)
-        );
-        configurationRequest.addField(new TextField(
-                CK_ICON_EMOJI, "Icon Emoji", null,
-                "Emoji to use as the icon for this message (overrides Icon URL)",
-                ConfigurationField.Optional.OPTIONAL)
-        );
-        configurationRequest.addField(new TextField(
-                CK_GRAYLOG2_URL, "Graylog URL", null,
-                "URL to your Graylog web interface. Used to build links in alarm notification.",
-                ConfigurationField.Optional.OPTIONAL)
-        );
-        configurationRequest.addField(new TextField(
-                CK_PROXY_ADDRESS, "Proxy", null,
-                "Please insert the proxy information in the follwoing format: <ProxyAddress>:<Port>",
-                ConfigurationField.Optional.OPTIONAL)
-        );
-        configurationRequest.addField(new TextField(
-                CK_FIELDS, "Custom fields", null,
-                "Add fields into alert (field1, field2...)",
+                CK_CUSTOM_MESSAGE, "Custom message", null,
+                "Add a custom message for the alert (overrides all the others)",
                 ConfigurationField.Optional.OPTIONAL)
         );
 
@@ -113,10 +91,6 @@ public class SlackPluginBase {
         if (!configuration.stringIsSet(CK_COLOR)) {
             throw new ConfigurationException(CK_COLOR + " is mandatory and must not be empty.");
         }
-
-        checkUri(configuration, CK_PROXY_ADDRESS);
-        checkUri(configuration, CK_ICON_URL);
-        checkUri(configuration, CK_GRAYLOG2_URL);
     }
 
     private static boolean isValidUriScheme(URI uri, String... validSchemes) {
