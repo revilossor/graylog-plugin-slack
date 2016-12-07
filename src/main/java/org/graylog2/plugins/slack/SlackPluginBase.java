@@ -20,7 +20,6 @@ public class SlackPluginBase {
     public static final String CK_NOTIFY_CHANNEL = "notify_channel";
     public static final String CK_ADD_ATTACHMENT = "add_attachment";
     public static final String CK_SHORT_MODE = "short_mode";
-    public static final String CK_LINK_NAMES = "link_names";
 
     public static final String CK_COLOR = "color";
     public static final String CK_ADD_BLITEMS = "backlog_items";
@@ -65,11 +64,6 @@ public class SlackPluginBase {
                 CK_NOTIFY_CHANNEL, "Notify Channel", false,
                 "Notify all users in channel by adding @channel to the message.")
         );
-        configurationRequest.addField(new BooleanField(
-                CK_LINK_NAMES, "Link names", true,
-                "Find and link channel names and user names")
-        );
-
         configurationRequest.addField(new TextField(
                 CK_CUSTOM_MESSAGE, "Custom message", null,
                 "Add a custom message for the alert (overrides all the others)",

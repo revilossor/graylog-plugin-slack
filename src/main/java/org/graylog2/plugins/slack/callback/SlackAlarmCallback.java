@@ -47,8 +47,7 @@ public class SlackAlarmCallback extends SlackPluginBase implements AlarmCallback
                 buildMessage(stream, result),
                 configuration.getString(CK_USER_NAME),
                 configuration.getString(CK_CUSTOM_MESSAGE),
-                configuration.getString(CK_CHANNEL),
-                configuration.getBoolean(CK_LINK_NAMES)
+                configuration.getString(CK_CHANNEL)
         );
 
         // Add attachments if requested.

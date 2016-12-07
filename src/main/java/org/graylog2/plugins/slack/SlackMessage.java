@@ -21,17 +21,15 @@ public class SlackMessage {
     private final String userName;
     private final String message;
     private final String color;
-    private final boolean linkNames;
-    private final String customMessage;
+    private String customMessage;
 
     private final List<AttachmentField> attachments;
 
-    public SlackMessage(String color, String message, String userName, String customMessage, String channel, boolean linkNames) {
+    public SlackMessage(String color, String message, String userName, String customMessage, String channel) {
         this.color = color;
         this.message = message;
         this.userName = userName;
         this.channel = channel;
-        this.linkNames = linkNames;
         this.customMessage = customMessage;
 
         this.attachments = Lists.newArrayList();
@@ -41,7 +39,7 @@ public class SlackMessage {
         // See https://api.slack.com/methods/chat.postMessage for valid parameters
         final Map<String, Object> params = new HashMap<String, Object>(){{
             put("channel", channel);
-            put("link_names", linkNames ? "1" : "0");
+            put("link_names", "1");
             put("parse", "none");
         }};
 

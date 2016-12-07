@@ -65,8 +65,7 @@ public class SlackMessageOutput extends SlackPluginBase implements MessageOutput
                 buildMessage(stream, msg),
                 configuration.getString(CK_USER_NAME),
                 configuration.getString(CK_CUSTOM_MESSAGE),
-                configuration.getString(CK_CHANNEL),
-                configuration.getBoolean(CK_LINK_NAMES)
+                configuration.getString(CK_CHANNEL)
         );
 
         // Add attachments if requested.
