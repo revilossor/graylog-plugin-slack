@@ -22,15 +22,17 @@ public class SlackMessage {
     private final String message;
     private final String color;
     private final boolean linkNames;
+    private final String customMessage;
 
     private final List<AttachmentField> attachments;
 
-    public SlackMessage(String color, String message, String userName, String channel, boolean linkNames) {
+    public SlackMessage(String color, String message, String userName, String customMessage, String channel, boolean linkNames) {
         this.color = color;
         this.message = message;
         this.userName = userName;
         this.channel = channel;
         this.linkNames = linkNames;
+        this.customMessage = customMessage;
 
         this.attachments = Lists.newArrayList();
     }
@@ -39,19 +41,23 @@ public class SlackMessage {
         // See https://api.slack.com/methods/chat.postMessage for valid parameters
         final Map<String, Object> params = new HashMap<String, Object>(){{
             put("channel", channel);
-            put("text", message);
             put("link_names", linkNames ? "1" : "0");
             put("parse", "none");
         }};
 
-        if (!isNullOrEmpty(userName)) {
-            params.put("username", userName);
+        if (isNullOrEmpty(customMessage)) {
+            params.put("text", message);
+            if (!attachments.isEmpty()) {
+                final Attachment attachment = new Attachment("Alert details", null, "Details:", color, attachments);
+                final List<Attachment> attachments = ImmutableList.of(attachment);
+                params.put("attachments", attachments);
+            }
+        } else {
+            params.put("text", customMessage);
         }
 
-        if (!attachments.isEmpty()) {
-            final Attachment attachment = new Attachment("Alert details", null, "Details:", color, attachments);
-            final List<Attachment> attachments = ImmutableList.of(attachment);
-            params.put("attachments", attachments);
+        if (!isNullOrEmpty(userName)) {
+            params.put("username", userName);
         }
 
         try {
@@ -63,20 +69,6 @@ public class SlackMessage {
 
     public void addAttachment(AttachmentField attachment) {
         this.attachments.add(attachment);
-    }
-
-    private String ensureEmojiSyntax(final String x) {
-        String emoji = x.trim();
-
-        if (!emoji.isEmpty() && !emoji.startsWith(":")) {
-            emoji = ":" + emoji;
-        }
-
-        if (!emoji.isEmpty() && !emoji.endsWith(":")) {
-            emoji = emoji + ":";
-        }
-
-        return emoji;
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
