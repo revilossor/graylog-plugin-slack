@@ -63,7 +63,6 @@ public class SlackMessageOutput extends SlackPluginBase implements MessageOutput
         SlackMessage slackMessage = new SlackMessage(
                 configuration.getString(CK_COLOR),
                 buildMessage(stream, msg),
-                configuration.getString(CK_USER_NAME),
                 configuration.getString(CK_CUSTOM_MESSAGE),
                 configuration.getString(CK_CHANNEL)
         );
@@ -76,11 +75,9 @@ public class SlackMessageOutput extends SlackPluginBase implements MessageOutput
     }
 
     public String buildMessage(Stream stream, Message msg) {
-        boolean notifyChannel = configuration.getBoolean(CK_NOTIFY_CHANNEL);
-
         String titleLink = titleLink = "_" + stream.getTitle() + "_";
 
-        return notifyChannel ? "@channel " : "" + "*New message in Graylog stream " + titleLink + "*:\n" + "> " + msg.getMessage();
+        return "" + "*New message in Graylog stream " + titleLink + "*:\n" + "> " + msg.getMessage();
     }
 
     @Override

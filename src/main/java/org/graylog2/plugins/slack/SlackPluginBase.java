@@ -16,8 +16,6 @@ import java.util.Arrays;
 public class SlackPluginBase {
     public static final String CK_WEBHOOK_URL = "webhook_url";
     public static final String CK_CHANNEL = "channel";
-    public static final String CK_USER_NAME = "user_name";
-    public static final String CK_NOTIFY_CHANNEL = "notify_channel";
     public static final String CK_COLOR = "color";
     public static final String CK_CUSTOM_MESSAGE = "custom_message";
 
@@ -33,18 +31,9 @@ public class SlackPluginBase {
                 ConfigurationField.Optional.NOT_OPTIONAL)
         );
         configurationRequest.addField(new TextField(
-                CK_USER_NAME, "User name", "Graylog",
-                "User name of the sender in Slack",
-                ConfigurationField.Optional.OPTIONAL)
-        );
-        configurationRequest.addField(new TextField(
                 CK_COLOR, "Color", "#FF0000",
                 "Color to use for Slack message",
                 ConfigurationField.Optional.NOT_OPTIONAL)
-        );
-        configurationRequest.addField(new BooleanField(
-                CK_NOTIFY_CHANNEL, "Notify Channel", false,
-                "Notify all users in channel by adding @channel to the message.")
         );
         configurationRequest.addField(new TextField(
                 CK_CUSTOM_MESSAGE, "Custom message", null,

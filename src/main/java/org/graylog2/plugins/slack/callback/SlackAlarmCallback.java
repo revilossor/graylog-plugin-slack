@@ -45,14 +45,13 @@ public class SlackAlarmCallback extends SlackPluginBase implements AlarmCallback
         SlackMessage message = new SlackMessage(
                 configuration.getString(CK_COLOR),
                 buildMessage(stream, result),
-                configuration.getString(CK_USER_NAME),
                 configuration.getString(CK_CUSTOM_MESSAGE),
                 configuration.getString(CK_CHANNEL)
         );
 
         // Add attachments if requested.
         final List<Message> backlogItems = getAlarmBacklog(result);
-        
+
         try {
             client.send(message);
         } catch (SlackClient.SlackClientException e) {
@@ -82,11 +81,9 @@ public class SlackAlarmCallback extends SlackPluginBase implements AlarmCallback
     }
 
     public String buildMessage(Stream stream, AlertCondition.CheckResult result) {
-        boolean notifyChannel = configuration.getBoolean(CK_NOTIFY_CHANNEL);
-
         String titleLink = "_" + stream.getTitle() + "_";
 
-        return notifyChannel ? "@channel " : "" + "*Alert for Graylog stream " + titleLink + "*:\n" + "> " + result.getResultDescription();
+        return "" + "*Alert for Graylog stream " + titleLink + "*:\n" + "> " + result.getResultDescription();
     }
 
     @Override

@@ -18,17 +18,15 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 public class SlackMessage {
 
     private final String channel;
-    private final String userName;
     private final String message;
     private final String color;
     private String customMessage;
 
     private final List<AttachmentField> attachments;
 
-    public SlackMessage(String color, String message, String userName, String customMessage, String channel) {
+    public SlackMessage(String color, String message, String customMessage, String channel) {
         this.color = color;
         this.message = message;
-        this.userName = userName;
         this.channel = channel;
         this.customMessage = customMessage;
 
@@ -54,9 +52,7 @@ public class SlackMessage {
             params.put("text", customMessage);
         }
 
-        if (!isNullOrEmpty(userName)) {
-            params.put("username", userName);
-        }
+        params.put("username", "graylog");
 
         try {
             return new ObjectMapper().writeValueAsString(params);
