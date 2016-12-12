@@ -8,3 +8,4 @@ target/
 /.project
 /release.properties
 buildinstallrestart.sh
+.DS_Store

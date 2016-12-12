@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.graylog.plugins</groupId>
-    <artifactId>graylog-plugin-slack</artifactId>
-    <version>2.4.0</version>
+    <artifactId>graylog-plugin-slack-pyca</artifactId>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
